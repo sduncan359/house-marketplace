@@ -12,7 +12,7 @@ import {
 import { db } from "../firebase.config";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
-import { async } from "@firebase/util";
+import ListingItem from "../components/ListingItem";
 
 function Category() {
   const [listings, setListings] = useState(null);
@@ -35,17 +35,17 @@ function Category() {
         );
 
         // Execute query
-        const querySnap = await getDocs(q);
+        const querySnap = await getDocs(q);       
 
         const listings = [];
 
-        querySnap.forEach((doc) => {
+        querySnap.forEach((doc) => {        
           return listings.push({
             id: doc.id,
-            data: doc.data,
+            data: doc.data(),
           });
         });
-
+       
         setListings(listings);
         setLoading(false);
       } catch (error) {
@@ -55,7 +55,7 @@ function Category() {
 
     fetchListings();
   }, [params.categoryName]);
-
+  
   return (
     <div className="category">
       <header>
@@ -70,9 +70,13 @@ function Category() {
       ) : listings && listings.length > 0 ? (
         <>
           <main>
-            <ul className="categoryListings">
-              {listings.map((listing) => (
-                <h3 key={listing.id}>{listing.data.name}</h3>
+            <ul className="categoryListings">              
+              {listings.map((listing) => (                
+                <ListingItem
+                  key={listing.id}
+                  listing={listing.data}
+                  id={listing.id}
+                />
               ))}
             </ul>
           </main>
