@@ -3,7 +3,7 @@ import { ReactComponent as DeleteIcon } from "../assets/svg/deleteIcon.svg";
 import bedIcon from "../assets/svg/bedIcon.svg";
 import bathtubIcon from "../assets/svg/bathtubIcon.svg";
 
-function ListingItem({ listing, id, onDelete }) {
+function ListingItem({ listing, id, onDelete }) {  
   return (
     <li className="categoryListing">
       <Link
@@ -11,7 +11,7 @@ function ListingItem({ listing, id, onDelete }) {
         className="categoryListingLink"
       >
         <img
-          src={listing.imageUrls[0]}
+          src={listing.imgUrls[0]}
           alt={listing.name}
           className="categoryListingImg"
         />
