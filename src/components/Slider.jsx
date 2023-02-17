@@ -1,6 +1,6 @@
-import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../firebase.config";
 import Spinner from "./Spinner";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
@@ -32,15 +32,19 @@ function Slider() {
         });
       });
 
-      setListings(listings);    
+      setListings(listings);
       setLoading(false);
     };
 
-    fetchListings();    
+    fetchListings();
   }, []);
 
   if (loading) {
     return <Spinner />;
+  }
+
+  if (listings.length === 0) {
+    return <></>;
   }
 
   return (
@@ -51,14 +55,14 @@ function Slider() {
         <Swiper
           modules={[Navigation, Pagination, Scrollbar, A11y]}
           slidesPerView={1}
-          navigation
           pagination={{ clickable: true }}
+          navigation
           style={{ height: "300px" }}
         >
           {listings.map(({ data, id }) => (
             <SwiperSlide
               key={id}
-              onClick={() => navigate(`/category/${data.type}/${data.id}`)}
+              onClick={() => navigate(`/category/${data.type}/${id}`)}
             >
               <div
                 style={{
@@ -66,7 +70,7 @@ function Slider() {
                   backgroundSize: "cover",
                 }}
                 className="swiperSlideDiv"
-              >                
+              >
                 <p className="swiperSlideText">{data.name}</p>
                 <p className="swiperSlidePrice">
                   ${data.discountedPrice ?? data.regularPrice}{" "}
