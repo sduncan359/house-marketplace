@@ -6,6 +6,13 @@ import Spinner from "../components/Spinner";
 import { db } from "../firebase.config";
 import shareIcon from "../assets/svg/shareIcon.svg";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import "swiper/css/a11y";
 
 function Listing() {
   const [listing, setListing] = useState(null);
@@ -37,7 +44,26 @@ function Listing() {
 
   return (
     <main>
-      {/* SLIDER */}
+      <Swiper
+        modules={[Navigation, Pagination, Scrollbar, A11y]}
+        slidesPerView={1}
+        pagination={{ clickable: true }}
+        navigation
+        style={{ height: '300px' }}
+      >
+        {listing.imgUrls.map((url, index) => (
+          <SwiperSlide key={index}>
+            <div
+              style={{
+                background: `url(${listing.imgUrls[index]}) center no-repeat`,
+                backgroundSize: "cover",
+              }}
+              className="swiperSlideDiv"
+            ></div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
       <div
         className="shareIconDiv"
         onClick={() => {
@@ -100,10 +126,12 @@ function Listing() {
           >
             <TileLayer
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url='http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png'
+              url="http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
             />
 
-            <Marker position={[listing.geolocation.lat, listing.geolocation.lng]}>
+            <Marker
+              position={[listing.geolocation.lat, listing.geolocation.lng]}
+            >
               <Popup>{listing.location}</Popup>
             </Marker>
           </MapContainer>
