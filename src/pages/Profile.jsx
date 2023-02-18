@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import arrowRight from "../assets/svg/keyboardArrowRightIcon.svg";
 import homeIcon from "../assets/svg/homeIcon.svg";
 import Spinner from "../components/Spinner";
+import ListingItem from "../components/ListingItem";
 
 function Profile() {
   const auth = getAuth();
@@ -24,8 +25,8 @@ function Profile() {
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
   });
-  const [listings, setListings] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+  const [listings, setListings] = useState(null);
 
   const { name, email } = formData;
 
@@ -50,12 +51,12 @@ function Profile() {
         });
       });
 
-      setListings(listings)
-      setLoading(false)
+      setListings(listings);
+      setLoading(false);
     };
 
     fetchUserListings();
-    console.log(listings)
+    console.log(listings);
   }, [auth.currentUser.uid]);
 
   const onLogout = () => {
@@ -87,8 +88,19 @@ function Profile() {
     }));
   };
 
+  const onDelete = async (listingId) => {
+    if (window.confirm("Are you sure you want to delete?")) {
+      await deleteDoc(doc(db, "listings", listingId));
+      const updatedListings = listings.filter(
+        (listing) => listing.id !== listingId
+      );
+      setListings(updatedListings);
+      toast.success("Successfully deleted listing");
+    }
+  };
+
   if (loading) {
-    return <Spinner />
+    return <Spinner />;
   }
 
   return (
@@ -133,11 +145,28 @@ function Profile() {
             />
           </form>
         </div>
+
         <Link to="/create-listing" className="createListing">
           <img src={homeIcon} alt="home" />
           <p>Sell or rent your home</p>
           <img src={arrowRight} alt="arrow right" />
         </Link>
+
+        {!loading && listings?.length > 0 && (
+          <>
+            <p className="listingText">Your Listings</p>
+            <ul className="listingsList">
+              {listings.map((listing) => (
+                <ListingItem
+                  key={listings.id}
+                  listing={listing.data}
+                  id={listing.id}
+                  onDelete={() => onDelete(listing.id)}
+                />
+              ))}
+            </ul>
+          </>
+        )}
       </main>
     </div>
   );
