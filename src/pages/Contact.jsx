@@ -7,15 +7,16 @@ import { toast } from "react-toastify";
 function Contact() {
   const [message, setMessage] = useState("");
   const [landlord, setLandlord] = useState(null);
+  // eslint-disable-next-line
   const [searchParams, setSearchParams] = useSearchParams();
 
   const params = useParams();
 
   useEffect(() => {
-    const getLandlord = async () => {      
+    const getLandlord = async () => {
       const docRef = doc(db, "users", params.landlordId);
       const docSnap = await getDoc(docRef);
- 
+
       if (docSnap.exists()) {
         setLandlord(docSnap.data());
       } else {
@@ -55,8 +56,13 @@ function Contact() {
             </div>
 
             <a
-              href={`mailto:${landlord.email}?Subject=${searchParams.get("listingName")}&body=${message}`}>
-              <button type="button" className="primaryButton">Send Message</button>
+              href={`mailto:${landlord.email}?Subject=${searchParams.get(
+                "listingName"
+              )}&body=${message}`}
+            >
+              <button type="button" className="primaryButton">
+                Send Message
+              </button>
             </a>
           </form>
         </main>
